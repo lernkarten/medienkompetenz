@@ -1,0 +1,1121 @@
+﻿<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Karten entdecken | Version 7</title>
+  <meta name="description" content="Detailansicht der Medienkompetenz-Karten mit didaktischen Hinweisen für Lehrkräfte." />
+    <style>
+    :root {
+      --bg: #fff9ec;
+      --paper: #fffef8;
+      --ink: #111111;
+      --muted: #3e3e3e;
+      --line: #121212;
+      --blue: #2a58c8;
+      --orange: #ea8a1f;
+      --red: #d63c2d;
+      --green: #2f9756;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(42,88,200,0.06) 0 7px, transparent 7px 100%),
+        linear-gradient(180deg, #fffef8 0%, #fff9ec 100%);
+      line-height: 1.45;
+    }
+    body.modal-open { overflow: hidden; }
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { width: min(var(--max), 100% - 2rem); margin: 0 auto; }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: #fffef8;
+      border-bottom: 3px solid var(--line);
+    }
+    .top-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.4rem 0;
+    }
+    .brand {
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 1rem;
+      border: 2px solid var(--line);
+      padding: 0.35rem 0.55rem;
+      background: #fff;
+    }
+    .menu {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding-bottom: 0.05rem;
+      min-width: 0;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .menu::-webkit-scrollbar { display: none; }
+    .menu a {
+      border: 2px solid var(--line);
+      padding: 0.32rem 0.58rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #fff;
+      white-space: nowrap;
+    }
+    .menu a.active { background: var(--line); color: #fff; }
+
+    .page-intro {
+      padding: 1rem 0 0.7rem;
+      border-bottom: 3px solid var(--line);
+    }
+    .page-intro h1 {
+      margin: 0;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      font-size: clamp(1.8rem, 3.8vw, 3rem);
+      line-height: 1.02;
+      letter-spacing: 0.01em;
+    }
+    .page-intro .intro-text {
+      margin: 0.52rem 0 0;
+      color: var(--muted);
+      max-width: 72ch;
+    }
+    .legend {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.65rem 0 0;
+    }
+    .chip {
+      border: 2px solid var(--line);
+      border-radius: 0;
+      background: #fff;
+      padding: 0.24rem 0.6rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+      color: #333;
+      text-decoration: none;
+    }
+    .tag-blue { background: #dfe8ff; }
+    .tag-orange { background: #ffe8cc; }
+    .tag-red { background: #ffe0de; }
+    .tag-green { background: #dff3e6; }
+
+    .vote-panel {
+      margin-top: 0.75rem;
+      border: 2px solid var(--line);
+      background: #fff;
+      padding: 0.85rem;
+    }
+    .vote-panel h2 {
+      margin: 0;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-size: 1rem;
+      line-height: 1.15;
+    }
+    .vote-panel p {
+      margin: 0.55rem 0;
+      color: #2f2f2f;
+    }
+    .vote-cards {
+      list-style: none;
+      margin: 0.45rem 0 0.6rem;
+      padding: 0;
+      display: grid;
+      gap: 0.3rem;
+    }
+    .vote-cards li {
+      border-left: 4px solid var(--line);
+      padding-left: 0.5rem;
+      font-weight: 600;
+    }
+    .vote-cards li.vote-red { border-left-color: #d63c2d; }
+    .vote-cards li.vote-green { border-left-color: #2f9756; }
+    .vote-cards li.vote-white { border-left-color: #cfd4da; }
+    .vote-questions {
+      margin: 0.25rem 0 0.6rem 1.1rem;
+      padding: 0;
+    }
+    .stack {
+      display: grid;
+      gap: 0;
+      padding: 0.45rem 0 1.2rem;
+    }
+
+    details.card {
+      border-bottom: 2px solid var(--line);
+      background: transparent;
+    }
+    summary {
+      list-style: none;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.78rem 0;
+    }
+    summary::-webkit-details-marker { display: none; }
+
+    .knum {
+      width: 35px;
+      height: 22px;
+      border-radius: 0;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .knum.blue { background: var(--blue); }
+    .knum.orange { background: var(--orange); }
+    .knum.red { background: var(--red); }
+    .knum.green { background: var(--green); }
+
+    .k-title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+    .k-cat {
+      margin-top: 0.08rem;
+      font-size: 0.81rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .expand {
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid #555;
+      border-bottom: 2px solid #555;
+      transform: rotate(45deg);
+      transition: transform 0.18s ease;
+      margin-right: 0.2rem;
+    }
+    details[open] .expand { transform: rotate(225deg); }
+
+    .card-body {
+      padding: 0.08rem 0 0.9rem;
+      display: grid;
+      gap: 0.9rem;
+      grid-template-columns: 0.95fr 1.05fr;
+      align-items: start;
+    }
+    .shots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.62rem;
+    }
+    .shot {
+      margin: 0;
+      border: 2px solid var(--line);
+      background: #fff;
+    }
+    .shot img {
+      width: 100%;
+      display: block;
+      cursor: zoom-in;
+    }
+    .shot figcaption {
+      margin: 0;
+      padding: 0.36rem 0.54rem;
+      font-size: 0.78rem;
+      color: #444;
+      border-top: 2px solid var(--line);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .didactics {
+      border-left: 3px solid var(--line);
+      padding-left: 0.75rem;
+    }
+    .didactics h3 {
+      margin: 0 0 0.34rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.82rem;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+    }
+    .didactics p { margin: 0.38rem 0; color: #333; }
+    .didactics ul { margin: 0.28rem 0 0 1.1rem; padding: 0; color: #333; }
+
+    footer {
+      padding: 0.85rem 0 1.3rem;
+      color: #4d4d4d;
+      font-size: 0.86rem;
+      border-top: 3px solid var(--line);
+    }
+
+    .img-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 16, 16, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      padding: 1rem;
+    }
+    .img-modal.open { display: flex; }
+    .img-modal-inner {
+      max-width: min(1020px, 100%);
+      max-height: 100%;
+      position: relative;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 0.5rem;
+    }
+    .img-modal-inner img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: calc(100vh - 8rem);
+      object-fit: contain;
+    }
+    .img-modal-caption {
+      color: #f4f4f4;
+      font-size: 0.88rem;
+      margin-top: 0.42rem;
+      text-align: center;
+    }
+    .img-modal-close {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.3rem;
+      width: 2.1rem;
+      height: 2.1rem;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 999px;
+      background: rgba(20, 20, 20, 0.92);
+      color: #fff;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .top-inner { align-items: flex-start; flex-direction: column; }
+      .menu { width: 100%; }
+      .card-body { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .menu a { font-size: 0.74rem; padding: 0.3rem 0.5rem; }
+      .shots { grid-template-columns: 1fr; }
+      summary { grid-template-columns: auto 1fr; }
+      .expand { display: none; }
+    }
+  </style>
+</head>
+<body>
+    <header class="top">
+    <div class="container top-inner">
+      <div class="brand">Stark im Netz</div>
+      <nav class="menu" aria-label="Hauptnavigation">
+        <a href="index.html#start">Start</a>
+        <a class="active" href="karten.html">Karten entdecken</a>
+        <a href="index.html#download">Download</a>
+        <a href="ueber-das-projekt.html">Über das Projekt</a>
+        <a href="index.html#lizenz">Lizenz</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-intro">
+      <h1>Karten im Detail</h1>
+      <p class="intro-text">
+        Alle 19 Karten mit Vorder- und Rückseite sowie didaktischen Hinweisen für den Unterricht - in DIN-A7-Grösse (etwas grösser als handelsübliche Spielkarten).
+      </p>
+      <div class="legend">
+        <span class="chip tag-blue">Sicher im Netz</span>
+        <span class="chip tag-orange">Wissen aus dem Netz</span>
+        <span class="chip tag-red">Regeln im Netz</span>
+        <span class="chip tag-green">Mein Leben im Netz</span>
+      </div>
+    </section>
+    <section id="pilot" class="stack">
+      <details class="card" id="karte-01">
+        <summary>
+          <span class="knum blue">01</span>
+          <div>
+            <p class="k-title">Datenschutz - Nicht alles gehört ins Internet</p>
+            <p class="k-cat">Kategorie: Sicher im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k01-front.png" alt="Karte 01 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k01-back.png" alt="Karte 01 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, was persönliche Daten sind und warum sie geschützt werden müssen. Sie wissen, dass sie nicht alles im Internet teilen sollten und dass sie ein Recht auf Schutz ihrer Daten haben. Sie erkennen mögliche Folgen unbedachten Teilens (z. B. Missbrauch von Fotos oder Profilen).</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Ein fiktives Profil anschauen und überlegen: Welche Informationen sind sensibel?</li>
+              <li>Online-Anmeldeformular besprechen: Welche Daten sind nötig?</li>
+              <li>Zugriffe einer App prüfen (z. B. Standort).</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-02">
+        <summary>
+          <span class="knum blue">02</span>
+          <div>
+            <p class="k-title">Gefahren im Internet - Diese Tricks gibt es</p>
+            <p class="k-cat">Kategorie: Sicher im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k02-front.png" alt="Karte 02 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k02-back.png" alt="Karte 02 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder kennen typische Internet-Tricks (Phishing, Malware, Social Engineering). Sie verstehen: Dahinter stecken Menschen mit klaren Zielen - zum Beispiel Passwörter, Geld oder private Daten.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Beispiel-Phishing-E-Mails aus dem Netz anschauen.</li>
+              <li>Eine typische Ransomware-Meldung als Beispiel betrachten und besprechen.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-03">
+        <summary>
+          <span class="knum blue">03</span>
+          <div>
+            <p class="k-title">Account - Wie schütze ich ihn vor Hackern</p>
+            <p class="k-cat">Kategorie: Sicher im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k03-front.png" alt="Karte 03 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k03-back.png" alt="Karte 03 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, was ein Account ist und warum er geschützt werden muss. Sie wissen, wie Hacker an Accounts gelangen können und kennen wichtige Schutzmassnahmen (starkes Passwort, keine Weitergabe, Zwei-Schritt-Anmeldung).</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Gemeinsam ein starkes Passwort nach der "Satz-Methode" entwickeln.</li>
+              <li>Beispiele für schwache und starke Passwörter vergleichen.</li>
+              <li>Eine Zwei-Schritt-Anmeldung (z. B. per Demo-Account) zeigen und erklären.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-04">
+        <summary>
+          <span class="knum blue">04</span>
+          <div>
+            <p class="k-title">Cybermobbing I - Erkennen und verstehen</p>
+            <p class="k-cat">Kategorie: Sicher im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k04-front.png" alt="Karte 04 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k04-back.png" alt="Karte 04 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, was Cybermobbing ist und wie es sich äußern kann (z. B. Schikane, Verleumdung, Blossstellen, Ausschluss). Sie erkennen, dass Cybermobbing echte Folgen für Gefühle, Selbstvertrauen und Schule haben kann.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Kurze, selbst erstellte und altersgerechte Fallbeispiele oder Chatverläufe vorstellen und gemeinsam einordnen.</li>
+              <li>Besprechen: Wie fühlt sich die betroffene Person?</li>
+              <li>Gemeinsam überlegen: Warum verhält sich der Täter oder die Täterin so?</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-05">
+        <summary>
+          <span class="knum blue">05</span>
+          <div>
+            <p class="k-title">Cybermobbing II - So schützt du dich und andere</p>
+            <p class="k-cat">Kategorie: Sicher im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k05-front.png" alt="Karte 05 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k05-back.png" alt="Karte 05 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder wissen, wie sie bei Cybermobbing reagieren können - als betroffene Person und als Zuschaürin oder Zuschaür. Sie verstehen: Niemand ist schuld, wenn er oder sie gemobbt wird. Hilfe holen ist richtig und wichtig.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Gemeinsam üben, klare und respektvolle Stoppsätze zu formulieren ("Lass das.", "Das ist nicht okay.").</li>
+              <li>Das Sichern von Beweisen erklären (z. B. wie ein Screenshot gemacht wird).</li>
+              <li>Vertrauenspersonen sammeln: An wen kann ich mich wenden? (Schule, Familie, Beratungsstellen).</li>
+              <li>Eine kindgerechte Online-Beratungsstelle vorstellen.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-06">
+        <summary>
+          <span class="knum blue">06</span>
+          <div>
+            <p class="k-title">Cybergrooming - Wenn dich Fremde online ansprechen</p>
+            <p class="k-cat">Kategorie: Sicher im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k06-front.png" alt="Karte 06 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k06-back.png" alt="Karte 06 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, was Cybergrooming ist und wie Täter im Internet vorgehen (z. B. Vertrauen aufbauen, Druck ausüben, Geheimnisse fordern).</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Einen altersgerecht formulierten Beispiel-Chat gemeinsam lesen und besprechen.</li>
+              <li>Besprechen, warum Täter Vertrauen aufbauen und warum sie Druck machen.</li>
+              <li>Gemeinsam überlegen: Wer kommt als Vertrauensperson in Frage?</li>
+              <li>Eine geeignete Beratungsstelle für Kinder vorstellen.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-07">
+        <summary>
+          <span class="knum orange">07</span>
+          <div>
+            <p class="k-title">Das Internet - Wie geht es und was geht</p>
+            <p class="k-cat">Kategorie: Wissen aus dem Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k07-front.png" alt="Karte 07 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k07-back.png" alt="Karte 07 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen in Grundzügen, wie das Internet funktioniert (Verbindung von Geräten, Server, Websites, Browser, Suchmaschinen). Sie erkennen, wie vielfältig das Internet im Alltag genutzt wird.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Den Weg zu einer Website Schritt für Schritt zeigen: Browser öffnen -> Suchmaschine nutzen -> Website anklicken.</li>
+              <li>Einige Websites oder Apps beispielhaft zeigen (z. B. Lern-App, Online-Lexikon, Messenger).</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-08">
+        <summary>
+          <span class="knum orange">08</span>
+          <div>
+            <p class="k-title">Informationen im Internet - Was stimmt wirklich</p>
+            <p class="k-cat">Kategorie: Wissen aus dem Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k08-front.png" alt="Karte 08 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k08-back.png" alt="Karte 08 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, dass im Internet nicht alle Informationen richtig sind. Sie kennen Merkmale von Fehlinformationen und wissen, wie man Inhalte grundlegend prüft.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Eine Behauptung aufstellen und diese gemeinsam mit den Kindern im Internet überprüfen (Quelle suchen, vergleichen, weitere Informationen finden).</li>
+              <li>Altersgerechte, reisserische oder unsachliche Texte vorstellen (ggf. selbst formuliert) und die Kinder selbst erkennen lassen, warum der Text hinterfragt werden sollte.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-09">
+        <summary>
+          <span class="knum orange">09</span>
+          <div>
+            <p class="k-title">Werbung im Internet - Nervig oder notwendig</p>
+            <p class="k-cat">Kategorie: Wissen aus dem Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k09-front.png" alt="Karte 09 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k09-back.png" alt="Karte 09 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, warum es Werbung im Internet gibt und dass sie oft dazu dient, Geld zu verdienen. Sie erkennen verschiedene Formen von Werbung (offene und versteckte Werbung, Inflüncer, Affiliate-Links).</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Eine Website oder App gemeinsam Öffnen und Werbeformen suchen (Banner, gesponserte Treffer, Produktplatzierungen).</li>
+              <li>Eine Suchmaschine zeigen und bezahlte Treffer von normalen Treffern unterscheiden.</li>
+              <li>Affiliate-Links anhand eines Inflüncers beispielhaft zeigen und erklären, wie damit Geld verdient wird.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-10">
+        <summary>
+          <span class="knum orange">10</span>
+          <div>
+            <p class="k-title">Künstliche Intelligenz I - Was ist das</p>
+            <p class="k-cat">Kategorie: Wissen aus dem Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k10-front.png" alt="Karte 10 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k10-back.png" alt="Karte 10 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen grundlegend, was Künstliche Intelligenz (KI) ist. Sie wissen, wie KI grob funktioniert und wo ihnen KI im Alltag begegnet. Sie erkennen: KI hat keine Gefühle und kein eigenes Bewusstsein.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Eine KI-Anwendung live zeigen (z. B. einen Chatbot etwas fragen oder ein Bild erstellen lassen).</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-11">
+        <summary>
+          <span class="knum orange">11</span>
+          <div>
+            <p class="k-title">Künstliche Intelligenz II - Herausforderungen und Risiken</p>
+            <p class="k-cat">Kategorie: Wissen aus dem Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k11-front.png" alt="Karte 11 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k11-back.png" alt="Karte 11 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, dass Künstliche Intelligenz nicht immer richtig liegt. Sie kennen typische Risiken wie erfundene Inhalte (Halluzinationen), täuschend echte KI-Bilder oder Videos (Deepfakes) und Verzerrungen durch fehlerhafte oder einseitige Trainingsdaten (Bias). Sie erkennen: KI wirkt oft sicher, kann sich aber irren oder falsche Inhalte erzeugen.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Ein altersgerechtes Deepfake-Beispiel zeigen und überlegen: Woran könnte man erkennen, dass es nicht echt ist?</li>
+              <li>Einige Fallbeispiele aus dem Netz zeigen, bei denen sich KI geirrt hat, und gemeinsam besprechen, warum das passieren kann.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-12">
+        <summary>
+          <span class="knum red">12</span>
+          <div>
+            <p class="k-title">Fotos von Menschen - Was darf ich online teilen</p>
+            <p class="k-cat">Kategorie: Regeln im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k12-front.png" alt="Karte 12 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k12-back.png" alt="Karte 12 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, dass jede Person selbst über Fotos und persönliche Inhalte bestimmen darf. Sie wissen, dass Fotos nur mit Erlaubnis geteilt werden dürfen. Sie unterscheiden zwischen privaten, fremden und Öffentlichen Situationen.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Beispielbilder zeigen (Familienfoto, Gruppenfoto, Konzertbild) und gemeinsam besprechen: Darf ich das posten - ja oder nein?</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-13">
+        <summary>
+          <span class="knum red">13</span>
+          <div>
+            <p class="k-title">Fotos von mir selbst - Was darf ich online zeigen</p>
+            <p class="k-cat">Kategorie: Regeln im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k13-front.png" alt="Karte 13 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k13-back.png" alt="Karte 13 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, dass auch Fotos von ihnen selbst nicht einfach beliebig online geteilt werden dürfen. Sie wissen, dass Kinder im Internet besonders geschützt sind und dass Eltern dabei mitentscheiden. Sie kennen die altersabhängige Rolle von Zustimmung (Eltern und eigene Einwilligung).</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Eine Einverständniserklärung für ein Klassenfoto zeigen und besprechen.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-14">
+        <summary>
+          <span class="knum red">14</span>
+          <div>
+            <p class="k-title">Urheberrecht - Schutz für kreative Werke</p>
+            <p class="k-cat">Kategorie: Regeln im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k14-front.png" alt="Karte 14 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k14-back.png" alt="Karte 14 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, was Urheberrecht ist und dass kreative Werke geschützt sind. Sie wissen, dass Bilder, Texte, Videos oder Musik nicht einfach kopiert oder als eigene ausgegeben werden dürfen.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Zwei Beispiele vergleichen: frei nutzbares Bild mit Lizenz vs. geschütztes Bild ohne Erlaubnis.</li>
+              <li>Gemeinsam üben, eine Quelle richtig anzugeben (z. B. Bild + Name des Urhebers).</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-15">
+        <summary>
+          <span class="knum green">15</span>
+          <div>
+            <p class="k-title">FOMO - Die Angst etwas zu verpassen</p>
+            <p class="k-cat">Kategorie: Mein Leben im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k15-front.png" alt="Karte 15 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k15-back.png" alt="Karte 15 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, was FOMO ("Fear of Missing Out") bedeutet - die Angst, etwas zu verpassen. Sie erkennen typische Situationen in sozialen Medien und Spielen, in denen FOMO entsteht. Sie wissen, welche Gefühle und Verhaltensweisen dadurch ausgelöst werden können.</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-16">
+        <summary>
+          <span class="knum green">16</span>
+          <div>
+            <p class="k-title">Alles perfekt - Was Social Media verschweigt</p>
+            <p class="k-cat">Kategorie: Mein Leben im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k16-front.png" alt="Karte 16 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k16-back.png" alt="Karte 16 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder erkennen, dass Vergleiche in sozialen Medien häufig auf einseitigen und bearbeiteten Darstellungen beruhen. Sie verstehen, dass solche Vergleiche das eigene Selbstwertgefühl beeinträchtigen können.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Zwei Bilder vergleichen: ein bearbeitetes "perfektes" Bild und ein normales Alltagsbild - Was fällt auf?</li>
+              <li>Ein Social-Media-Profil zeigen (z. B. eine Familie auf Weltreise / Work-and-Travel) und gemeinsam analysieren: Was wird gezeigt? Was könnte im Alltag schwierig sein, wird aber nicht gezeigt?</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-17">
+        <summary>
+          <span class="knum green">17</span>
+          <div>
+            <p class="k-title">In-Game Käufe - Wie kleine Beträge gross werden</p>
+            <p class="k-cat">Kategorie: Mein Leben im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k17-front.png" alt="Karte 17 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k17-back.png" alt="Karte 17 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, wie In-Game-Käufe funktionieren und warum kleine Beträge schnell zu hohen Ausgaben werden können. Sie erkennen typische Kaufarten (Spielwährungen, Lootboxen, Skins) und verstehen psychologische Tricks wie sofortige Belohnung oder Zeitdruck.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Ein Spiel (oder Screenshots) zeigen, in dem In-Game-Käufe angeboten werden.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-18">
+        <summary>
+          <span class="knum green">18</span>
+          <div>
+            <p class="k-title">Medienzeit I - Warum es schwer ist aufzuhören</p>
+            <p class="k-cat">Kategorie: Mein Leben im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k18-front.png" alt="Karte 18 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k18-back.png" alt="Karte 18 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder verstehen, warum es schwer sein kann, Mediennutzung zu beenden. Sie erkennen Mechanismen wie Endlos-Scrollen, Sofort-Belohnungen und FOMO sowie die Rolle von Medien als "Trostspender". Sie wissen, welche Folgen übermässige Medienzeit haben kann.</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="card" id="karte-19">
+        <summary>
+          <span class="knum green">19</span>
+          <div>
+            <p class="k-title">Medienzeit II - So bekommst du die Kontrolle</p>
+            <p class="k-cat">Kategorie: Mein Leben im Netz</p>
+          </div>
+          <span class="expand" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          <div class="shots">
+            <figure class="shot">
+              <img src="images/cards/k19-front.png" alt="Karte 19 Vorderseite" />
+              <figcaption>Vorderseite</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/cards/k19-back.png" alt="Karte 19 Rueckseite" />
+              <figcaption>Rückseite</figcaption>
+            </figure>
+          </div>
+          <div class="didactics">
+            <h3>Für Lehrkräfte</h3>
+            <p><strong>Lernziel:</strong> Die Kinder kennen konkrete Strategien, um ihre Medienzeit bewusst zu steürn. Sie verstehen, wie Planung, klare Regeln und Abstand zum Gerät helfen können. Sie erkennen, dass echte Erlebnisse und soziale Kontakte eine wichtige Balance schaffen.</p>
+            <p><strong>Live zeigen:</strong></p>
+            <ul>
+              <li>Push-Nachrichten am Beispiel erklären und zeigen, wie man sie ausschalten kann.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+    </section>
+  
+    <section class="vote-panel" aria-labelledby="interaktive-abstimmung">
+      <h2 id="interaktive-abstimmung">Interaktive Abstimmung mit Farbkarten</h2>
+      <p>Ergänzend zu den Themenkarten arbeite ich im Unterricht mit drei einfachen Farbkarten:</p>
+      <ul class="vote-cards">
+        <li class="vote-red">Rot - Nein</li>
+        <li class="vote-green">Grün - Ja</li>
+        <li class="vote-white">Weiß - Ich bin unsicher / neutral</li>
+      </ul>
+      <p>Mit diesen Karten können die Schülerinnen und Schüler schnell und sichtbar auf Fragen reagieren. So bleibt der Unterricht lebendig, und alle werden aktiv einbezogen.</p>
+      <p><strong>Typische Fragen sind zum Beispiel:</strong></p>
+      <ul class="vote-questions">
+        <li>Wer besitzt bereits ein eigenes Smartphone?</li>
+        <li>Wer schreibt seinen Eltern per Messenger?</li>
+        <li>Wer hat schon einmal einen In-App-Kauf gemacht?</li>
+        <li>Wer war schon länger als drei Stunden am Stück am Handy?</li>
+      </ul>
+      <p>Durch die Abstimmungen entsteht ein offener Austausch über Mediennutzung im Alltag. Gleichzeitig lernen die Kinder, ihr eigenes Verhalten zu reflektieren - ohne Druck, sondern auf spielerische und respektvolle Weise.</p>
+    </section>
+  </main>
+
+  <footer class="container">
+    Stark im Netz | Detailseite für Kartenvorstellung (Pilot)
+    <div style="padding-top:0.45rem;padding-bottom:0.2rem;">
+    <a href="impressum.html">Impressum</a> | <a href="datenschutz.html">Datenschutz</a>
+  </div>
+</footer>
+
+  <div class="img-modal" id="imgModal" aria-hidden="true">
+    <div class="img-modal-inner" role="dialog" aria-modal="true" aria-label="Vergroesserte Kartenansicht">
+      <button type="button" class="img-modal-close" id="imgModalClose" aria-label="Ansicht schliessen">&times;</button>
+      <img id="imgModalImage" src="" alt="" />
+      <div class="img-modal-caption" id="imgModalCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("imgModal");
+    const modalImage = document.getElementById("imgModalImage");
+    const modalCaption = document.getElementById("imgModalCaption");
+    const closeBtn = document.getElementById("imgModalClose");
+    const zoomImages = document.querySelectorAll(".shot img");
+
+    function openModal(img) {
+      modalImage.src = img.src;
+      modalImage.alt = img.alt || "Kartenansicht";
+      const figcaption = img.closest("figure")?.querySelector("figcaption");
+      modalCaption.textContent = figcaption ? figcaption.textContent : "";
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      modalImage.src = "";
+      document.body.classList.remove("modal-open");
+    }
+
+    zoomImages.forEach((img) => {
+      img.addEventListener("click", () => openModal(img));
+      img.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openModal(img);
+        }
+      });
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      img.setAttribute("aria-label", `${img.alt}. Vergroessern.`);
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("open")) closeModal();
+    });
+
+    function openCardFromHash() {
+      if (!window.location.hash) return;
+      const hash = window.location.hash;
+      if (!hash.startsWith("#karte-")) return;
+      const target = document.querySelector(hash);
+      if (!target || !target.classList.contains("card")) return;
+
+      document.querySelectorAll("details.card.focus-card").forEach((card) => {
+        card.classList.remove("focus-card");
+      });
+      document.querySelectorAll("details.card[open]").forEach((card) => {
+        if (card !== target) card.removeAttribute("open");
+      });
+
+      target.setAttribute("open", "");
+      target.classList.add("focus-card");
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      window.setTimeout(() => {
+        target.classList.remove("focus-card");
+      }, 2200);
+    }
+
+    window.addEventListener("hashchange", openCardFromHash);
+    window.addEventListener("load", openCardFromHash);
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

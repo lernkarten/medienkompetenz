@@ -1,0 +1,258 @@
+﻿<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Über das Projekt | Version 7</title>
+  <meta name="description" content="Projektseite in der optisch komplett anderen V7-Variante." />
+  <style>
+    :root {
+      --bg: #fff9ec;
+      --paper: #fffef8;
+      --ink: #111111;
+      --muted: #3e3e3e;
+      --line: #121212;
+      --max: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(42,88,200,0.06) 0 7px, transparent 7px 100%),
+        linear-gradient(180deg, #fffef8 0%, #fff9ec 100%);
+      line-height: 1.45;
+    }
+    .wrap { width: min(var(--max), 100% - 2rem); margin: 0 auto; }
+    a { color: inherit; text-decoration: none; }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: #fffef8;
+      border-bottom: 3px solid var(--line);
+    }
+    .top-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.4rem 0;
+    }
+    .brand {
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 1rem;
+      border: 2px solid var(--line);
+      padding: 0.35rem 0.55rem;
+      background: #fff;
+    }
+    .menu {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding-bottom: 0.05rem;
+      min-width: 0;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .menu::-webkit-scrollbar { display: none; }
+    .menu a {
+      border: 2px solid var(--line);
+      padding: 0.32rem 0.58rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #fff;
+      white-space: nowrap;
+    }
+    .menu a.active { background: var(--line); color: #fff; }
+
+    main {
+      padding: 1.2rem 0 1.5rem;
+    }
+    h1 {
+      margin: 0;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      font-size: clamp(2rem, 4.4vw, 3.5rem);
+      line-height: 1;
+      letter-spacing: 0.01em;
+    }
+    .intro {
+      margin: 0.7rem 0 1rem;
+      color: var(--muted);
+      max-width: 72ch;
+    }
+
+    .block {
+      border: 2px solid var(--line);
+      background: var(--paper);
+      padding: 0.75rem;
+      margin-bottom: 0.7rem;
+    }
+    .block h2 {
+      margin: 0 0 0.32rem;
+      text-transform: uppercase;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      letter-spacing: 0.04em;
+      font-size: 0.95rem;
+    }
+    .block p { margin: 0.5rem 0; }
+    .block ul { margin: 0.35rem 0 0.7rem 1.2rem; }
+    .author-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+    .author-photo {
+      border: 2px solid var(--line);
+      background: #fff;
+      aspect-ratio: 16 / 10;
+      display: grid;
+      place-items: center;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      text-align: center;
+      padding: 0.5rem;
+    }
+    .author-photo img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .stamp {
+      margin-top: 0.75rem;
+      border-top: 2px solid var(--line);
+      padding-top: 0.45rem;
+      font-size: 0.88rem;
+      color: #444;
+    }
+
+    footer {
+      padding: 0.85rem 0 1.3rem;
+      color: #4d4d4d;
+      font-size: 0.86rem;
+      border-top: 3px solid var(--line);
+    }
+
+    @media (max-width: 980px) {
+      .top-inner { align-items: flex-start; flex-direction: column; }
+      .menu { width: 100%; }
+      .author-grid { grid-template-columns: 1fr; }
+      .author-photo { aspect-ratio: 16 / 9; }
+    }
+      @media (max-width: 720px) {
+      .menu a { font-size: 0.74rem; padding: 0.3rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <div class="brand">Stark im Netz</div>
+      <nav class="menu" aria-label="Hauptnavigation">
+        <a href="index.html#start">Start</a>
+        <a href="karten.html">Karten entdecken</a>
+        <a href="index.html#download">Download</a>
+        <a class="active" href="ueber-das-projekt.html">Über das Projekt</a>
+        <a href="index.html#lizenz">Lizenz</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>Über das Projekt</h1>
+    <p class="intro">Entstehung, Hintergründe und didaktischer Ansatz des Kartensets "Stark im Netz" aus der Praxis einer Medienkompetenz-AG in der 4. Klasse.</p>
+<section class="block">
+      <h2>Medienkompetenz verstehen</h2>
+      <p>Medienkompetenz bedeutet mehr als das Wissen über Apps, Geräte oder Plattformen. Es geht darum, ein Bewusstsein für das eigene Handeln im digitalen Raum zu entwickeln.</p>
+      <p>In meiner Arbeit als Leiter einer Medienkompetenz-AG in einer 4. Klasse erlebe ich immer wieder: Kinder lernen technische Abläufe sehr schnell. Die grössere Herausforderung liegt darin, innezuhalten, zu hinterfragen und das eigene Verhalten zu reflektieren.</p>
+    </section>
+
+    <section class="block">
+      <h2>Auf der Suche nach einem passenden Format</h2>
+      <p>Zwar gibt es zahlreiche Materialien und Unterrichtsideen zum Thema Medienkompetenz im Internet. In der praktischen Arbeit merkte ich jedoch, dass ich für meinen Kurs ein anderes Format suchte - eines, das stärker auf meine Lerngruppe, den zeitlichen Rahmen der AG und meine inhaltlichen Schwerpunkte abgestimmt ist.</p>
+      <p>Daraufhin begann ich, eigene Lernblätter im klassischen DIN-A4-Format zu erstellen. Diese sollten die im Unterricht behandelten Inhalte nochmals strukturiert aufgreifen und etwas ausführlicher vertiefen. In der Praxis zeigte sich jedoch schnell: Zusätzliche Lesetexte sind in einer freiwilligen AG wenig attraktiv.</p>
+      <p>Ein prägender Impuls entstand schliesslich auf einer beruflichen Konferenz. Ein Referent verteilte zu seinem Thema ein Kartenset - mit auffallend grosser Nachfrage. Gleichzeitig fanden klassische Flyer und ausführliche Papiere deutlich weniger Beachtung.</p>
+      <p>So entstand die Idee zu diesen Lernkarten.</p>
+    </section>
+
+    <section class="block">
+      <h2>Warum Lernkarten?</h2>
+      <p>Die Karten verfolgen nicht das Ziel, ein Thema vollständig zu erklären - schon der begrenzte Platz auf einer Karte setzt hier klare Grenzen. Stattdessen werden Inhalte bewusst so abstrahiert dargestellt, dass sie über einzelne Apps, Plattformen oder aktuelle Entwicklungen hinaus gültig bleiben.</p>
+      <p>Grundlegendes Wissen ist wichtig. Entscheidend ist jedoch, dass Wissen allein nicht ausreicht. Sinnvoller ist es, die Fähigkeit zu stärken, im richtigen Moment innezuhalten und sich selbst die passenden Fragen zu stellen.</p>
+      <ul>
+        <li>Warum möchte ich immer weiterspielen oder weiterscrollen?</li>
+        <li>Ist dieser Link vertraünswürdig?</li>
+        <li>Was verliere ich, wenn ich zu viel Zeit am Handy verbringe?</li>
+        <li>Braucht diese App wirklich all diese Daten?</li>
+        <li>Darf ich dieses Video wirklich online teilen?</li>
+        <li>Kann das stimmen, was hier auf dieser Website steht?</li>
+        <li>Darf ich dieses Bild einfach verwenden?</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <h2>Zum Nachdenken</h2>
+      <p>Um diese Reflexionsfähigkeit zu fördern, schliesst jede Karte mit einer "Zum Nachdenken"-Aufgabe ab. Diese Fragen haben bewusst keine eindeutige Musterlösung. Sie sollen zum Austausch anregen.</p>
+      <p>Die Karten sind kein abgeschlossenes Lehrwerk, sondern ein reduziertes Werkzeug, das Raum für Dialog schafft.</p>
+      <p class="stamp">Projektbericht | Stand: Februar 2026</p>
+    </section>
+
+    
+    <section class="block">
+      <h2>Über den Autor</h2>
+      <div class="author-grid">
+        <figure class="author-photo">
+          <img src="images/Portraet_05_2024_1_small.jpg" alt="Portraet des Autors" />
+        </figure>
+        <div>
+          <p>Seit über 15 Jahren bin ich in der IT zu Hause. Nach meinem Studium als Diplom-Informatiker startete ich als Softwareentwickler, entdeckte aber schnell meine Leidenschaft für IT-Sicherheit. Seit mehr als zwölf Jahren berate ich nun kleine, mittelständische und grosse Unternehmen als IT-Sicherheitsexperte.</p>
+          <p>Seit 2024 freue ich mich ausserdem, auch Kinder für IT begeistern zu dürfen. An der Grundschule Markkleeberg-Grossstädteln unterrichte ich Medienkompetenz und leite eine Programmier-AG mit dem Calliope mini.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <p>Stark im Netz | Projektseite für das Medienkompetenz-Kartenset</p>
+    <p><a href="impressum.html">Impressum</a> | <a href="datenschutz.html">Datenschutz</a></p>
+</footer>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

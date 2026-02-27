@@ -1,0 +1,444 @@
+﻿<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stark im Netz | Version 7</title>
+  <meta name="description" content="Version 7: komplett anderer visueller Entwurf für Stark im Netz." />
+  <style>
+    :root {
+      --bg: #fff9ec;
+      --paper: #fffef8;
+      --ink: #111111;
+      --muted: #3e3e3e;
+      --line: #121212;
+      --blue: #2a58c8;
+      --orange: #ea8a1f;
+      --red: #d63c2d;
+      --green: #2f9756;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(42,88,200,0.06) 0 7px, transparent 7px 100%),
+        linear-gradient(180deg, #fffef8 0%, var(--bg) 100%);
+      line-height: 1.45;
+    }
+
+    .container { width: min(var(--max), 100% - 2rem); margin: 0 auto; }
+    a { color: inherit; text-decoration: none; }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: #fffef8;
+      border-bottom: 3px solid var(--line);
+    }
+    .top-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.4rem 0;
+    }
+    .brand {
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 1rem;
+      border: 2px solid var(--line);
+      padding: 0.35rem 0.55rem;
+      background: #fff;
+    }
+    .menu {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding-bottom: 0.05rem;
+      min-width: 0;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .menu::-webkit-scrollbar { display: none; }
+    .menu a {
+      border: 2px solid var(--line);
+      padding: 0.32rem 0.58rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #fff;
+      white-space: nowrap;
+    }
+    .menu a.active {
+      background: var(--line);
+      color: #fff;
+    }
+
+    .hero {
+      padding: 1rem 0 0.8rem;
+    }
+    .hero-grid {
+      display: grid;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid var(--line);
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .headline {
+      border: 3px solid var(--line);
+      background: var(--paper);
+      padding: 1rem;
+      position: relative;
+    }
+    .headline::before {
+      content: "FREI NUTZBAR";
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 0.22rem 0.4rem;
+      border-left: 3px solid var(--line);
+      border-bottom: 3px solid var(--line);
+      background: var(--orange);
+      color: #111;
+    }
+    .headline small {
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      font-size: 0.72rem;
+      margin-bottom: 0.35rem;
+    }
+    h1 {
+      margin: 0;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      font-size: clamp(2rem, 5vw, 4.1rem);
+      line-height: 0.95;
+      letter-spacing: 0.01em;
+    }
+    .lead {
+      margin: 0.7rem 0 0.95rem;
+      max-width: 56ch;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+    .cta {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .cta a {
+      border: 2px solid var(--line);
+      padding: 0.5rem 0.65rem;
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #fff;
+    }
+    .cta .main {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    .hero-art {
+      border: 3px solid var(--line);
+      background: #fff;
+      padding: 0.55rem;
+      display: grid;
+      align-content: center;
+    }
+    .hero-art img {
+      width: 100%;
+      display: block;
+      border: 0;
+      filter: saturate(1.05);
+    }
+
+    main section {
+      padding: 1rem 0;
+      border-bottom: 3px solid var(--line);
+    }
+    h2 {
+      margin: 0 0 0.45rem;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 1.2rem;
+    }
+    .intro {
+      margin: 0 0 0.8rem;
+      color: var(--muted);
+      max-width: 72ch;
+    }
+
+    .topic-grid {
+      display: grid;
+      gap: 0.6rem;
+    }
+    .topic {
+      border: 2px solid var(--line);
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      background: #fff;
+    }
+    .topic-title {
+      border-right: 2px solid var(--line);
+      padding: 0.7rem;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+    }
+    .topic.blue .topic-title { background: #dfe8ff; }
+    .topic.orange .topic-title { background: #ffe8cc; }
+    .topic.red .topic-title { background: #ffe0de; }
+    .topic.green .topic-title { background: #dff3e6; }
+    .topic ul {
+      margin: 0;
+      padding: 0.6rem 0.7rem;
+      list-style: none;
+      columns: 1;
+    }
+    .topic li { padding: 0.12rem 0; }
+    .topic a { color: #173b63; }
+
+    .download-board {
+      border: 2px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .download-col {
+      padding: 0.75rem;
+    }
+    .download-col + .download-col {
+      border-left: 2px solid var(--line);
+    }
+    .download-col h3 {
+      margin: 0 0 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.82rem;
+      font-family: "Arial Black", "Segoe UI", sans-serif;
+    }
+    .download-col p { margin: 0.3rem 0; color: var(--muted); }
+    .download-col a {
+      border-bottom: 2px solid #8ea3bf;
+      font-weight: 700;
+    }
+    .hint {
+      margin-top: 0.65rem;
+      border: 2px dashed #777;
+      background: #fff;
+      padding: 0.55rem 0.65rem;
+      color: #3f3f3f;
+    }
+
+    .license-copy {
+      border: 2px solid var(--line);
+      background: #fff;
+      padding: 0.75rem;
+    }
+    .license-copy p { margin: 0.5rem 0; }
+    .license-copy .note {
+      margin-top: 0.75rem;
+      border-top: 2px solid var(--line);
+      padding-top: 0.45rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    footer {
+      padding: 0.85rem 0 1.3rem;
+      color: #4d4d4d;
+      font-size: 0.86rem;
+    }
+    .footline {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .top-inner { align-items: flex-start; flex-direction: column; }
+      .menu { width: 100%; }
+      .hero-grid, .download-board { grid-template-columns: 1fr; }
+      .download-col + .download-col { border-left: 0; border-top: 2px solid var(--line); }
+      .topic { grid-template-columns: 1fr; }
+      .topic-title { border-right: 0; border-bottom: 2px solid var(--line); }
+    }
+      @media (max-width: 720px) {
+      .menu a { font-size: 0.74rem; padding: 0.3rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="container top-inner">
+      <div class="brand">Stark im Netz</div>
+      <nav class="menu" aria-label="Hauptnavigation">
+        <a class="active" href="index.html#start">Start</a>
+        <a href="karten.html">Karten entdecken</a>
+        <a href="index.html#download">Download</a>
+        <a href="ueber-das-projekt.html">Über das Projekt</a>
+        <a href="index.html#lizenz">Lizenz</a>
+      </nav>
+    </div>
+  </header>
+
+  <section id="start" class="hero">
+    <div class="container hero-grid">
+      <article class="headline">
+        <small>Medienkompetenz | Klasse 4</small>
+        <h1>Stark<br/>im Netz</h1>
+        <p class="lead">19 Lernkarten für den Unterricht: klar, direkt, kostenlos. Fokus auf Datenschutz, Information, KI, Rechte und reflektierten Medienalltag.</p>
+        <div class="cta">
+          <a class="main" href="#download">Jetzt herunterladen</a>
+          <a href="karten.html">Karten ansehen</a>
+        </div>
+      </article>
+      <figure class="hero-art">
+        <img src="images/karten-titelseite-01.png" alt="Kartenansicht Stark im Netz" />
+      </figure>
+    </div>
+  </section>
+
+  <main class="container">
+    <section id="karten">
+      <h2>Themenübersicht</h2>
+      <p class="intro">Die Karten sind übersichtlich in vier Themenbereiche gegliedert. Alle Titel führen direkt zu den passenden Details auf der Kartenseite.</p>
+      <div class="topic-grid">
+        <article class="topic blue">
+          <div class="topic-title">Sicher im Netz<br/>01-06</div>
+          <ul>
+            <li><a href="karten.html#karte-01">01 Datenschutz - Nicht alles gehört ins Internet</a></li>
+            <li><a href="karten.html#karte-02">02 Gefahren im Internet - Diese Tricks gibt es</a></li>
+            <li><a href="karten.html#karte-03">03 Account - Wie schütze ich ihn vor Hackern</a></li>
+            <li><a href="karten.html#karte-04">04 Cybermobbing I - Erkennen und verstehen</a></li>
+            <li><a href="karten.html#karte-05">05 Cybermobbing II - So schützt du dich und andere</a></li>
+            <li><a href="karten.html#karte-06">06 Cybergrooming - Wenn dich Fremde online ansprechen</a></li>
+          </ul>
+        </article>
+
+        <article class="topic orange">
+          <div class="topic-title">Wissen aus dem Netz<br/>07-11</div>
+          <ul>
+            <li><a href="karten.html#karte-07">07 Das Internet - Wie geht es und was geht</a></li>
+            <li><a href="karten.html#karte-08">08 Informationen im Internet - Was stimmt wirklich</a></li>
+            <li><a href="karten.html#karte-09">09 Werbung im Internet - Nervig oder notwendig</a></li>
+            <li><a href="karten.html#karte-10">10 Künstliche Intelligenz I - Was ist das</a></li>
+            <li><a href="karten.html#karte-11">11 Künstliche Intelligenz II - Herausforderungen und Risiken</a></li>
+          </ul>
+        </article>
+
+        <article class="topic red">
+          <div class="topic-title">Regeln im Netz<br/>12-14</div>
+          <ul>
+            <li><a href="karten.html#karte-12">12 Fotos von Menschen - Was darf ich online teilen</a></li>
+            <li><a href="karten.html#karte-13">13 Fotos von mir selbst - Was darf ich online zeigen</a></li>
+            <li><a href="karten.html#karte-14">14 Urheberrecht - Schutz für kreative Werke</a></li>
+          </ul>
+        </article>
+
+        <article class="topic green">
+          <div class="topic-title">Mein Leben im Netz<br/>15-19</div>
+          <ul>
+            <li><a href="karten.html#karte-15">15 FOMO - Die Angst etwas zu verpassen</a></li>
+            <li><a href="karten.html#karte-16">16 Soziale Medien - Warum Vergleiche dir schaden</a></li>
+            <li><a href="karten.html#karte-17">17 In-Game Käufe - Wie kleine Beträge gross werden</a></li>
+            <li><a href="karten.html#karte-18">18 Medienzeit I - Warum es schwer ist aufzuhören</a></li>
+            <li><a href="karten.html#karte-19">19 Medienzeit II - So bekommst du die Kontrolle</a></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="download">
+      <h2>Download</h2>
+      <p class="intro">Hier findest du beide Druckvarianten des Kartensets als PDF-Datei.</p>
+      <div class="download-board">
+        <article class="download-col">
+          <h3>Mit 3mm Beschnitt</h3>
+          <p><a href="pdf/MK-Karten_2026-02_mit_Beschnitt.pdf" target="_blank" rel="noopener">PDF</a></p>
+          <p>Für professionellen Druck.</p>
+        </article>
+        <article class="download-col">
+          <h3>Ohne Beschnitt</h3>
+          <p><a href="pdf/MK-Karten_2026-02.pdf" target="_blank" rel="noopener">PDF</a></p>
+          <p>Für Zuhause oder Schul-Drucker.</p>
+        </article>
+      </div>
+      <p class="hint"><strong>Hinweise zum Druck:</strong><br>Dieses Kartenset wurde mit Microsoft PowerPoint erstellt, das standardmässig nur den RGB-Farbraum unterstützt. Da der professionelle Druck auf CMYK basiert, kann es theoretisch zu Farbabweichungen kommen. PowerPoint bietet keine direkte CMYK-Unterstützung - die Dateien werden also immer in RGB exportiert.<br><strong>Praktische Erfahrung:</strong><br>Trotzdem waren die Druckergebnisse bei unseren Tests (z. B. mit der Hemmersbach Druck GmbH) farbtreu und entsprachen der Bildschirmdarstellung. Für beste Ergebnisse empfehlen wir Digitaldruck.</p>
+    </section>
+
+    <section id="lizenz">
+      <h2>Lizenz</h2>
+      <div class="license-copy">
+        <p><strong>Nutzungsbedingungen für das Kartenset "MedienKomp Karten 2026"</strong></p>
+        <p>Dieses Kartenset darf kostenlos als PDF heruntergeladen und für private, bildungsbezogene und andere nicht-kommerzielle Zwecke genutzt werden. Es darf ausgedruckt, ausgestellt und in Schulen, Workshops oder anderen Bildungskontexten verwendet werden.</p>
+        <p>Die unveränderte Originalversion darf kostenlos für nicht-kommerzielle Zwecke weitergegeben werden.</p>
+        <p>Änderungen am Inhalt oder Layout sind nicht gestattet.</p>
+        <p>Kommerzielle Nutzung, Vervielfältigung oder Verbreitung - ganz oder in Teilen - sind nicht erlaubt.</p
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footline">
+      <span>Stark im Netz | Freies Unterrichtsmaterial zur Medienkompetenz</span>
+      <span>Stand: Februar 2026</span>
+    </div>
+    <div class="container" style="padding-top:0.45rem;padding-bottom:0.2rem;">
+    <a href="impressum.html">Impressum</a> | <a href="datenschutz.html">Datenschutz</a>
+  </div>
+</footer>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
